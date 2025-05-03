@@ -18,16 +18,20 @@ def download_playlist():
             'preferredcodec': 'mp3',
         }],
         'download_archive': 'downloaded.txt',
-        'quiet': True,
+        'quiet': False,
     }
 
     with YoutubeDL(ydl_opts) as ydl:
-        ydl.download([PLAYLIST_URL])
+        result = ydl.download([PLAYLIST_URL])
+        return result
 
 @app.route('/sync', methods=['POST'])
 def sync_playlist():
-    download_playlist()
-    return jsonify({"status": "OK", "message": "Playlist synced"})
+    try:
+        result = download_playlist()
+        return jsonify({"status": "OK", "message": "Playlist synced", "result": result})
+    except Exception as e:
+        return jsonify({"status": "ERROR", "message": str(e)}), 500
 
 @app.route('/list', methods=['GET'])
 def list_files():
