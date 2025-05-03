@@ -39,5 +39,10 @@ def list_files():
 def download_file(filename):
     return send_from_directory(DOWNLOAD_DIR, filename)
 
+@app.route('/')
+@app.route('/status')
+def status():
+    return jsonify({"status": "online", "message": "Servidor funcionando correctamente"})
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
